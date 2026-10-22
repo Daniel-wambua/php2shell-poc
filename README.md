@@ -20,14 +20,9 @@
 Two tools for the **php2shell** advisories, both authorized-use only and aimed
 at owned infrastructure:
 
-1. **`php2shell-checker`** — offline-first version checker. Classifies a host
-   as `vulnerable` / `ok` / `unknown` from its advertised PHP version.
-2. **`php2shell-poc`** — a lab exploit PoC that demonstrates what an attacker
-   does with the vulnerable surface, and doubles as proof that a fix worked.
-
-The checker is a Rust port plus a behavior-identical Python port of
-[`openai/php2shell-checker`](https://github.com/openai/php2shell-checker)
-(`skills/phpcheck-url/scripts/phpcheck.js`, Apache-2.0).
+This repo contains the **`php2shell-poc`** — a lab exploit PoC that demonstrates
+what an attacker does with the vulnerable surface, and doubles as proof that a
+fix worked.
 
 ## The vulnerabilities
 

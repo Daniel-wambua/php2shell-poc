@@ -1,8 +1,8 @@
 [package]
-name = "php2shell-checker"
+name = "php2shell-poc"
 version = "1.0.0"
 edition = "2021"
-description = "Authorized php2shell checker and lab PoC for homelab use"
+description = "Authorized php2shell PoC (CVE-2026-109618 / CVE-2026-109619) for homelab use"
 license = "Apache-2.0"
 
 [dependencies]
@@ -12,10 +12,6 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
 url = "2"
-
-[[bin]]
-name = "php2shell-checker"
-path = "src/main.rs"
 
 [[bin]]
 name = "php2shell-poc"
