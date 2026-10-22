@@ -1,0 +1,7 @@
+# php2shell-checker scan list
+# One target per line. Bare hosts get https:// automatically.
+# Lines starting with # are ignored.
+
+wiki.lab.local
+https://git.lab.local
+http://10.0.0.5:8080

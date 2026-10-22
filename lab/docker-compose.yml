@@ -1,0 +1,10 @@
+services:
+  php2shell-target:
+    image: php:8.4.26-apache
+    container_name: php2shell-target
+    ports:
+      - "8088:80"
+    volumes:
+      - ./webroot:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./mpm_prefork.conf:/etc/apache2/mods-enabled/mpm_prefork.conf
