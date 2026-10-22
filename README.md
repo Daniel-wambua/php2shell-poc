@@ -12,6 +12,8 @@
 
 **Authorized-use only. For owned infrastructure and lab environments.**
 
+![Demo](demo.gif)
+
 </div>
 
 ---
