@@ -82,7 +82,6 @@ code runs.
 │       ├── index.php           # Session endpoint (injection target)
 │       └── vuln.php            # Deliberate LFI sink (chain terminator)
 ├── README.md
-└── backupcode_coding-high/     # Timestamped backups of edited sources
 ```
 
 ---
