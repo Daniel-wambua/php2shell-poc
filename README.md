@@ -40,23 +40,9 @@ PHP 5.4), which writes attacker-influenced request data — including multipart
 filenames — into the session store during request startup, before application
 code runs.
 
-> **Scope of the checker.** `php2shell-checker` performs a *version-disclosure
-> check only*. It sends one `HEAD` (falling back to `GET` on `405`/`501`), reads
-> `Server` and `X-Powered-By`, and compares against a cutoff table.
->
-> **Scope of the PoC.** `php2shell-poc` is a lab-grade exploit demonstration.
-> It only chains the session-injection primitive into an LFI sink that already
-> exists in the target application. It does not implement the heap-grooming
-> memory-corruption chains, and it is not a general-purpose weapon against
-> third-party systems.
-
 ---
 
 ## Why this exists
-
-The reference project ships a checker that classifies an endpoint as
-`vulnerable`, `ok`, or `unknown` based on the PHP version it advertises. The
-upstream implementation is a single Node script. This repository provides:
 
 - a **native Rust binary** (no Node runtime needed on the host),
 - a **drop-in Python port** for environments without a Rust toolchain,
@@ -84,10 +70,8 @@ upstream implementation is a single Node script. This repository provides:
 ```
 .
 ├── Cargo.toml                  # Rust manifest (two binaries)
-├── src/main.rs                 # php2shell-checker + unit tests
 ├── src/bin/poc.rs              # php2shell-poc (Rust) + unit tests
 ├── php2shell_poc.py            # php2shell-poc (Python, stdlib only)
-├── phpcheck.py                 # php2shell-checker (Python port, stdlib only)
 ├── tests/
 │   └── test_php2shell_poc.py   # 14 Python unit tests for the PoC
 ├── hosts.example.txt           # Sample scan list for --scan
@@ -107,46 +91,24 @@ upstream implementation is a single Node script. This repository provides:
 
 ### Rust
 
-Builds two binaries: `php2shell-checker` and `php2shell-poc`.
+Builds one binary: `php2shell-poc`.
 
 ```sh
 cargo build --release
-./target/release/php2shell-checker --help
 ./target/release/php2shell-poc --help
 ```
 
 ### Python
 
-Both Python tools are stdlib-only — no `pip install` required.
+Stdlib-only — no `pip install` required.
 
 ```sh
-python3 phpcheck.py --help          # checker
 python3 php2shell_poc.py --help     # PoC
 ```
 
 ---
 
 ## Usage
-
-```sh
-# Check one site
-php2shell-checker "https://lab.local"
-phpcheck.py "https://lab.local"
-
-# Check the local PHP CLI on this host
-php2shell-checker --local
-php2shell-checker --local --php /usr/bin/php8.3
-
-# JSON output
-php2shell-checker "https://lab.local" --json
-
-# Scan many homelab sites (one target per line)
-php2shell-checker --scan hosts.txt
-php2shell-checker --scan hosts.txt --json
-
-# Custom timeout (seconds, >0 and <=60)
-php2shell-checker "https://lab.local" --timeout 5
-```
 
 ### PoC usage
 
@@ -351,10 +313,9 @@ Tear down with `cd lab && docker compose down`.
 ## Verification
 
 ```sh
-cargo test                              # 9 unit tests (4 checker + 5 poc), 0 warnings
+cargo test                              # 5 unit tests, 0 warnings
 cargo build --release
 python3 -m unittest tests.test_php2shell_poc -v   # 14 Python PoC tests
-python3 phpcheck.py --version          # 1.0.0
 ```
 
 **Checker:** a 66-case parity harness covers local version parsing,
@@ -415,7 +376,7 @@ post-exploitation concern on the host, not a property of this vulnerability.
    fixate the session. This breaks the injection step above outright.
 4. **Remove LFI sinks.** No user-controlled value should reach `include`,
    `require`, `fopen`, or `readfile` without an allowlist.
-5. **Re-verify** with both tools: the checker must say `OK`, and the PoC must
+5. **Re-verify** with both tools: the PoC must
    say `NOT CONFIRMED`.
 
 ### Detection signals
@@ -429,4 +390,3 @@ processes spawning `sh`/`id`/`whoami`. Alert on any of those in web logs.
 ## License and provenance
 
 Behavior, cutoff table, and CLI semantics mirror
-`openai/php2shell-checker` (Apache-2.0). This port is likewise Apache-2.0.
